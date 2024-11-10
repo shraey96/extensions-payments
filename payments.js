@@ -1,3 +1,17 @@
+const getQueryParams = (url = window.location.href) => {
+  // Create a URL object to parse the query string
+  const urlObj = new URL(url);
+  const params = new URLSearchParams(urlObj.search);
+
+  // Convert parameters to a plain object
+  const queryParams = {};
+  for (const [key, value] of params.entries()) {
+    queryParams[key] = value;
+  }
+
+  return queryParams;
+};
+
 window.paypal
   .Buttons({
     style: {
@@ -10,21 +24,44 @@ window.paypal
       amount: 2.99,
     },
 
-    createOrder: function (data, actions) {
-      return actions.order.create({
-        purchase_units: [
-          {
-            amount: {
-              value: "2.99",
-            },
+    createOrder: () => {
+      const { user_email, id } = getQueryParams();
+
+      // if (!user_email || !id) {
+      //   alert("missing user_email and id");
+      //   return;
+      // }
+
+      return fetch(
+        "http://127.0.0.1:54321/functions/v1/yt-payments-create-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        ],
-      });
+          body: {
+            x: 1,
+          },
+        }
+      )
+        .then((res) => {
+          if (res.ok) return res.json();
+          return res.json().then((json) => Promise.reject(json));
+        })
+        .then(({ id }) => {
+          return id;
+        })
+        .catch((e) => {
+          console.error(e.error);
+        });
     },
 
-    onApprove: function (data, actions) {
-      return actions.order.capture().then(function (details) {
-        console.log(details);
+    onApprove: (data, actions) => {
+      console.log(22, data, actions);
+      return actions.order.capture().then((details) => {
+        if (details.status === "COMPLETED") {
+          alert("Transaction completed by " + details.payer.name.given_name);
+        }
       });
     },
   })
