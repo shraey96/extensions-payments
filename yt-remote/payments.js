@@ -1,9 +1,14 @@
 // constants
-const FUNCTIONS_BASE_URL =
+
+const isLocalEnv =
   window.location.origin.includes("localhost") ||
-  window.location.origin.includes("127.0.0.1")
-    ? "http://127.0.0.1:54321"
-    : "";
+  window.location.origin.includes("127.0.0.1");
+
+const FUNCTIONS_BASE_URL = isLocalEnv ? "http://127.0.0.1:54321" : "";
+
+const PAYPAL_CLIENT_ID =
+  "AZot3DPGFuNM4c6GJPMjaS07BEPvt_ikO3uT_5gesGg4TWKbH2fF2wShY1-rPG_G5PJuQKTcEV5jY0jX";
+const PAYPAL_SCRIPT_URL = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons&disable-funding=venmo,paylater`;
 
 // utils
 const getQueryParams = (url = window.location.href) => {
@@ -32,6 +37,32 @@ const promisifiedFetch = (url, options = {}) => {
       })
       .then((data) => resolve(data))
       .catch((error) => reject(error));
+  });
+};
+
+const loadScript = (src, attributes = {}) => {
+  return new Promise((resolve, reject) => {
+    // Check if the script is already added
+    if (document.querySelector(`script[src="${src}"]`)) {
+      resolve(); // Script already exists, resolve immediately
+      return;
+    }
+
+    // Create a new script element
+    const script = document.createElement("script");
+    script.src = src;
+
+    // Set any additional attributes passed in
+    for (const [key, value] of Object.entries(attributes)) {
+      script.setAttribute(key, value);
+    }
+
+    // Handle the script load event
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+
+    // Append the script to the head or body
+    document.head.appendChild(script);
   });
 };
 
@@ -85,4 +116,6 @@ const renderPaypalButton = () => {
     .render(".paypal-payments-btn-container");
 };
 
-renderPaypalButton();
+loadScript(PAYPAL_SCRIPT_URL, {
+  "data-sdk-integration-source": "developer-studio",
+}).then(renderPaypalButton);
