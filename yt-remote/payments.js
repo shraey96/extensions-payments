@@ -10,20 +10,13 @@ const PAYPAL_CLIENT_ID =
   "AZot3DPGFuNM4c6GJPMjaS07BEPvt_ikO3uT_5gesGg4TWKbH2fF2wShY1-rPG_G5PJuQKTcEV5jY0jX";
 const PAYPAL_SCRIPT_URL = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons&disable-funding=venmo,paylater`;
 
-// utils
-const getQueryParams = (url = window.location.href) => {
-  // Create a URL object to parse the query string
-  const urlObj = new URL(url);
-  const params = new URLSearchParams(urlObj.search);
+const modal = document.getElementById("buyNowModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
 
-  // Convert parameters to a plain object
-  const queryParams = {};
-  for (const [key, value] of params.entries()) {
-    queryParams[key] = value;
-  }
-
-  return queryParams;
-};
+const emailSection = document.getElementById("emailSection");
+const paymentSection = document.getElementById("paymentSection");
+const continueBtn = document.getElementById("continueBtn");
+const emailInput = document.getElementById("email");
 
 const promisifiedFetch = (url, options = {}) => {
   return new Promise((resolve, reject) => {
@@ -66,7 +59,7 @@ const loadScript = (src, attributes = {}) => {
   });
 };
 
-const renderPaypalButton = () => {
+const renderPaypalButton = (email = "") => {
   window.paypal
     .Buttons({
       style: {
@@ -87,10 +80,8 @@ const renderPaypalButton = () => {
       },
 
       onApprove: async (data) => {
-        const { user_email, user_id } = getQueryParams();
         const userObject = {
-          ...(user_email && { user_email }),
-          ...(user_id && { user_id }),
+          email,
         };
 
         const resp = await promisifiedFetch(
@@ -118,4 +109,39 @@ const renderPaypalButton = () => {
 
 loadScript(PAYPAL_SCRIPT_URL, {
   "data-sdk-integration-source": "developer-studio",
-}).then(renderPaypalButton);
+});
+
+const openModal = () => {
+  modal.style.display = "flex"; // Show the modal
+  modal.setAttribute("aria-hidden", "false"); // Set aria-hidden to false for accessibility
+  document.body.style.overflow = "hidden"; // Prevent background scroll
+  emailSection.style.display = "block"; // Hide the email input section
+};
+
+// Close modal when the close button is clicked
+closeModalBtn.addEventListener("click", () => {
+  modal.setAttribute("aria-hidden", "true"); // Set aria-hidden to true for accessibility
+  document.body.style.overflow = "auto"; // Re-enable background scroll
+  modal.style.display = "none"; // Hide the modal
+  emailSection.style.display = "none"; // Hide the email input section
+  paymentSection.style.display = "none"; // Show the payment section
+});
+
+document
+  .querySelector("#activatePaidVersionButton")
+  .addEventListener("click", () => {
+    openModal();
+  });
+
+// Handle the "Continue" button click
+continueBtn.addEventListener("click", () => {
+  // Validate the email
+  const emailValue = emailInput.value.trim();
+  if (emailValue) {
+    // Show the payment page
+    emailSection.style.display = "none"; // Hide the email input section
+    paymentSection.style.display = "block"; // Show the payment section
+  } else {
+    alert("Please enter a valid email address.");
+  }
+});

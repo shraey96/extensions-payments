@@ -75,8 +75,9 @@
       }
     </script>
 
-    <!-- CSS File -->
+    <!-- CSS Files -->
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="modal.css" />
   </head>
   <body>
     <!-- Info Section -->
@@ -156,24 +157,78 @@
     <!-- Pricing Section -->
     <section id="pricing" class="section">
       <h2>Pricing</h2>
-      <div class="pricing-comparison">
-        <div class="plan">
-          <h3>Free Plan</h3>
+
+      <div class="pricing-container">
+        <div class="pricing-card">
+          <h2>Free</h2>
+          <p>Get access to many features for free</p>
+          <h3>$0</h3>
           <ul>
-            <li>Basic remote control</li>
-            <li>Ad skipping</li>
+            <li><span class="check-icon">✔</span> Basic remote controls</li>
+            <li><span class="check-icon">✔</span> Volume Control</li>
+            <li><span class="check-icon">✔</span> Repeat videos</li>
+            <li>
+              <span class="check-icon">✔</span> Control up to 4 YouTube tabs
+            </li>
           </ul>
         </div>
-        <div class="plan">
-          <h3>Pro Plan</h3>
+        <div class="pricing-card">
+          <h2>Pro</h2>
+          <p>Unlock Full Access for Advanced Features</p>
+          <h3>$2</h3>
           <ul>
-            <li>All Free Plan features</li>
-            <li>Advanced controls</li>
-            <li>Custom shortcuts</li>
+            <li><span class="check-icon">✔</span> Advanced remote controls</li>
+            <li><span class="check-icon">✔</span> Volume Control</li>
+            <li><span class="check-icon">✔</span> Repeat videos</li>
+            <li><span class="check-icon">✔</span> Skip ads</li>
+            <li>
+              <span class="check-icon">✔</span> Control any number of YouTube
+              tabs
+            </li>
+            <li>
+              <span class="check-icon">✔</span> Search videos from the extension
+            </li>
           </ul>
         </div>
       </div>
+      <button class="cta-button" id="activatePaidVersionButton">Buy</button>
     </section>
+
+    <div class="modal" id="buyNowModal" aria-hidden="true">
+      <div class="modal__overlay">
+        <div class="modal__container">
+          <!-- Close Button (cross) -->
+          <button
+            class="modal__close"
+            id="closeModalBtn"
+            aria-label="Close modal"
+          >
+            &times;
+          </button>
+          <h2>Checkout</h2>
+
+          <!-- Email Input and Info Text -->
+          <div id="emailSection">
+            <label for="email" class="modal__label">Enter your email</label>
+            <input
+              type="email"
+              id="email"
+              class="modal__input"
+              placeholder="you@example.com"
+              required
+            />
+            <p class="modal__info">Your purchase will be tied to this email.</p>
+            <button id="continueBtn" class="modal__btn">Continue</button>
+          </div>
+
+          <!-- Payment Link (Initially hidden) -->
+          <div id="paymentSection" style="display: none">
+            <h3>Complete Purchase</h3>
+            <button id="continueBtn" class="modal__btn">Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer id="footer" class="footer">
       <div class="footer-links">
@@ -186,4 +241,6 @@
       <p>&copy; 2024 YT Remote. All rights reserved.</p>
     </footer>
   </body>
+
+  <script type="text/javascript" src="./payments.js"></script>
 </html>
