@@ -113,6 +113,11 @@ body {
     width: 170px;
     height: 260px;
     border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.feature-imgs img:hover {
+    transform: scale(1.1);
 }
 
 /* Pricing Section */
@@ -151,7 +156,49 @@ body {
 }
 
 
-
+/* General footer styling */
+.footer {
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Footer links container */
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Ensures wrapping on smaller screens */
+    gap: 10px; /* Space between links */
+    margin-bottom: 10px;
+  }
+  
+  /* Footer links */
+  .footer-links a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Divider styling (optional) */
+  .footer-links span {
+    color: #666;
+  }
+  
+  /* Ensure proper spacing for small screens */
+  @media (max-width: 768px) {
+    .footer-links {
+      flex-direction: column; /* Stack links vertically */
+      gap: 5px; /* Reduce spacing for smaller screens */
+    }
+  }
+  
 
 /* General Mobile Styles */
 @media (max-width: 768px) {
@@ -229,6 +276,7 @@ body {
       width: 130px;
       height: 200px;
     }
+
   }
   
   /* Pricing Section */
