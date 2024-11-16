@@ -74,6 +74,7 @@ const showErrorMessage = (error) => {
 };
 
 const renderPaypalButton = (user_email = "") => {
+  document.querySelector(".paypal-payments-btn-container").innerHTML = "";
   window.paypal
     .Buttons({
       style: {
@@ -123,6 +124,8 @@ const renderPaypalButton = (user_email = "") => {
               }),
             }
           );
+
+          console.log({ resp });
         } catch (error) {
           showErrorMessage(error);
         }
@@ -161,13 +164,13 @@ const handleCashFreeOrderCreate = async () => {
       console.log(
         "User has closed the popup or there is some payment error, Check for Payment Status"
       );
-      showErrorMessage(result);
+      showErrorMessage(payment);
     }
 
     if (payment.paymentDetails) {
       // This will be called whenever the payment is completed irrespective of transaction status
       console.log("Payment has been completed, Check for Payment Status");
-      console.log(result.paymentDetails.paymentMessage);
+      console.log(payment.paymentDetails.paymentMessage);
     }
   } catch (error) {
     showErrorMessage(error);
@@ -226,8 +229,6 @@ cashFreePayBtn.addEventListener("click", () => {
   const phoneValue = phoneInput.value.trim();
   if (phoneValue) {
     // Show the payment page
-    console.log(111, phoneValue);
-
     handleCashFreeOrderCreate();
   } else {
     alert("Please enter a valid phone number.");
@@ -235,7 +236,6 @@ cashFreePayBtn.addEventListener("click", () => {
 });
 
 cashfreeBtn.addEventListener("click", () => {
-  console.log(111, cashfree);
   togglePaymentSection("hide");
   toggleCashFreeSection("show");
 });
