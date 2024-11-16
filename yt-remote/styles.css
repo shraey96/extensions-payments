@@ -60,3 +60,9 @@ li {
     font-weight: bold;
     color: #333;
 }
+
+
+.paymentSectionContent {
+    display: flex;
+    flex-direction: column;
+}

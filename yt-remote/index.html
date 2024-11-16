@@ -78,6 +78,13 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="modal.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.css"
+      integrity="sha512-k6op6U+6fzScsVhxntLBg+Ob/Gv64fjNfjuAcNtbngRoi1LKf+aicRaEs3zeTrRuoIkOjGwLf9FR5BR7B3NItw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    /> -->
   </head>
   <body>
     <!-- Info Section -->
@@ -191,7 +198,7 @@
           </ul>
         </div>
       </div>
-      <button class="cta-button" id="activatePaidVersionButton">Buy</button>
+      <!-- <button class="cta-button" id="activatePaidVersionButton">Buy</button> -->
     </section>
 
     <div class="modal" id="buyNowModal" aria-hidden="true">
@@ -207,24 +214,55 @@
           </button>
           <h2>Checkout</h2>
 
-          <!-- Email Input and Info Text -->
-          <div id="emailSection">
-            <label for="email" class="modal__label">Enter your email</label>
-            <input
-              type="email"
-              id="email"
-              class="modal__input"
-              placeholder="you@example.com"
-              required
-            />
-            <p class="modal__info">Your purchase will be tied to this email.</p>
-            <button id="continueBtn" class="modal__btn">Continue</button>
-          </div>
+          <div>
+            <!-- Email Input and Info Text -->
+            <div id="emailSection">
+              <label for="email" class="modal__label">Enter your email</label>
+              <input
+                type="email"
+                id="email"
+                class="modal__input"
+                placeholder="you@example.com"
+                required
+              />
+              <p class="modal__info">
+                Your purchase will be tied to this email.
+              </p>
+              <button id="continueBtn" class="modal__btn">Continue</button>
+            </div>
 
-          <!-- Payment Link (Initially hidden) -->
-          <div id="paymentSection" style="display: none">
-            <h3>Complete Purchase</h3>
-            <button id="continueBtn" class="modal__btn">Continue</button>
+            <!-- Payment Link (Initially hidden) -->
+            <div id="paymentSection" style="display: none">
+              <div class="paymentSectionContent">
+                <div class="paypal-payments-btn-container"></div>
+                <span>OR</span>
+                <button class="cashfree-payments-btn-container">
+                  Pay via CashFree
+                </button>
+              </div>
+            </div>
+
+            <!-- Cashfree payments  -->
+            <div id="cashFreePaymentsSection" style="display: none">
+              <div>
+                <div id="phoneSection">
+                  <label for="phone" class="modal__label"
+                    >Enter your mobile</label
+                  >
+                  <input
+                    type="number"
+                    id="phone"
+                    class="modal__input"
+                    placeholder="91 2212345678"
+                    required
+                  />
+                  <p class="modal__info">
+                    Your purchase will be tied to this email.
+                  </p>
+                  <button id="cashFreePay" class="modal__btn">Pay</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -242,5 +280,15 @@
     </footer>
   </body>
 
+  <!-- <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js"
+    integrity="sha512-2B9/byNV1KKRm5nQ2RLViPFD6U4dUjDGwuW1GU+ImJh8YinPU9Zlq1GzdTMO+G2ROrB5o1qasJBy1ttYz0wCug=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script> -->
+  <script
+    type="text/javascript"
+    src="https://sdk.cashfree.com/js/v3/cashfree.js"
+  ></script>
   <script type="text/javascript" src="./payments.js"></script>
 </html>

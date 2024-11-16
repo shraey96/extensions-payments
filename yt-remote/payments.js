@@ -10,13 +10,22 @@ const PAYPAL_CLIENT_ID =
   "AZot3DPGFuNM4c6GJPMjaS07BEPvt_ikO3uT_5gesGg4TWKbH2fF2wShY1-rPG_G5PJuQKTcEV5jY0jX";
 const PAYPAL_SCRIPT_URL = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons&disable-funding=venmo,paylater`;
 
+const cashfree = Cashfree({
+  mode: isLocalEnv ? "sandbox" : "production",
+});
+
+// DOM Selectors
 const modal = document.getElementById("buyNowModal");
 const closeModalBtn = document.getElementById("closeModalBtn");
-
 const emailSection = document.getElementById("emailSection");
 const paymentSection = document.getElementById("paymentSection");
 const continueBtn = document.getElementById("continueBtn");
 const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
+const buyNowButton = document.getElementById("activatePaidVersionButton");
+const cashfreeBtn = document.querySelector(".cashfree-payments-btn-container");
+const cashFreeSection = document.getElementById("cashFreePaymentsSection");
+const cashFreePayBtn = document.getElementById("cashFreePay");
 
 const promisifiedFetch = (url, options = {}) => {
   return new Promise((resolve, reject) => {
@@ -59,7 +68,12 @@ const loadScript = (src, attributes = {}) => {
   });
 };
 
-const renderPaypalButton = (email = "") => {
+const showErrorMessage = (error) => {
+  alert("Something went wrong: " + error.message || error.error);
+  console.error(error);
+};
+
+const renderPaypalButton = (user_email = "") => {
   window.paypal
     .Buttons({
       style: {
@@ -70,68 +84,129 @@ const renderPaypalButton = (email = "") => {
       },
 
       createOrder: async () => {
-        const resp = await promisifiedFetch(
-          `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-create-order`
-        ).catch((err) => {
-          console.error(err);
-        });
+        try {
+          const resp = await promisifiedFetch(
+            `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-create-order`,
 
-        return resp.id;
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ gateway: "paypal", user_email }),
+            }
+          );
+
+          return resp.id;
+        } catch (error) {
+          showErrorMessage(error);
+        }
       },
 
       onApprove: async (data) => {
         const userObject = {
-          email,
+          user_email,
         };
 
-        const resp = await promisifiedFetch(
-          `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-capture-order`,
-
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...data,
-              ...userObject,
-            }),
-          }
-        ).catch((err) => {
-          console.error(err);
-        });
-
-        console.log(111, resp);
+        try {
+          const resp = await promisifiedFetch(
+            `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-capture-order`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...data,
+                ...userObject,
+                gateway: "paypal",
+              }),
+            }
+          );
+        } catch (error) {
+          showErrorMessage(error);
+        }
       },
     })
     .render(".paypal-payments-btn-container");
 };
 
-loadScript(PAYPAL_SCRIPT_URL, {
-  "data-sdk-integration-source": "developer-studio",
-});
+const handleCashFreeOrderCreate = async () => {
+  const user_phone = phoneInput.value.trim();
+  const user_email = emailInput.value.trim();
+
+  try {
+    const resp = await promisifiedFetch(
+      `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-create-order`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gateway: "cashfree", user_email, user_phone }),
+      }
+    );
+
+    console.log({ resp });
+
+    const payment = await cashfree.checkout({
+      paymentSessionId: resp.payment_session_id,
+      redirectTarget: "_modal",
+    });
+
+    console.log({ payment });
+
+    if (payment.error) {
+      // This will be true whenever user clicks on close icon inside the modal or any error happens during the payment
+      console.log(
+        "User has closed the popup or there is some payment error, Check for Payment Status"
+      );
+      showErrorMessage(result);
+    }
+
+    if (payment.paymentDetails) {
+      // This will be called whenever the payment is completed irrespective of transaction status
+      console.log("Payment has been completed, Check for Payment Status");
+      console.log(result.paymentDetails.paymentMessage);
+    }
+  } catch (error) {
+    showErrorMessage(error);
+  }
+};
+
+// UI Controls
+
+const togglePaymentSection = (type = "hide") => {
+  paymentSection.style.display = type === "show" ? "block" : "none";
+};
+
+const toggleEmailInputSection = (type = "hide") => {
+  emailSection.style.display = type === "show" ? "block" : "none";
+};
+
+const toggleModalSection = (type = "hide") => {
+  modal.style.display = type === "show" ? "flex" : "none";
+  document.body.style.overflow = type === "show" ? "hidden" : "auto";
+};
+
+const toggleCashFreeSection = (type = "hide") => {
+  cashFreeSection.style.display = type === "show" ? "block" : "none";
+};
 
 const openModal = () => {
-  modal.style.display = "flex"; // Show the modal
-  modal.setAttribute("aria-hidden", "false"); // Set aria-hidden to false for accessibility
-  document.body.style.overflow = "hidden"; // Prevent background scroll
-  emailSection.style.display = "block"; // Hide the email input section
+  toggleModalSection("show");
+  toggleEmailInputSection("show");
 };
 
 // Close modal when the close button is clicked
 closeModalBtn.addEventListener("click", () => {
-  modal.setAttribute("aria-hidden", "true"); // Set aria-hidden to true for accessibility
-  document.body.style.overflow = "auto"; // Re-enable background scroll
-  modal.style.display = "none"; // Hide the modal
-  emailSection.style.display = "none"; // Hide the email input section
-  paymentSection.style.display = "none"; // Show the payment section
+  toggleModalSection("hide");
+  toggleEmailInputSection("hide");
+  togglePaymentSection("hide");
+  toggleCashFreeSection("hide");
 });
 
-document
-  .querySelector("#activatePaidVersionButton")
-  .addEventListener("click", () => {
-    openModal();
-  });
+buyNowButton.addEventListener("click", () => openModal());
 
 // Handle the "Continue" button click
 continueBtn.addEventListener("click", () => {
@@ -139,9 +214,32 @@ continueBtn.addEventListener("click", () => {
   const emailValue = emailInput.value.trim();
   if (emailValue) {
     // Show the payment page
-    emailSection.style.display = "none"; // Hide the email input section
-    paymentSection.style.display = "block"; // Show the payment section
+    toggleEmailInputSection("hide");
+    togglePaymentSection("show");
+    renderPaypalButton(emailValue);
   } else {
     alert("Please enter a valid email address.");
   }
+});
+
+cashFreePayBtn.addEventListener("click", () => {
+  const phoneValue = phoneInput.value.trim();
+  if (phoneValue) {
+    // Show the payment page
+    console.log(111, phoneValue);
+
+    handleCashFreeOrderCreate();
+  } else {
+    alert("Please enter a valid phone number.");
+  }
+});
+
+cashfreeBtn.addEventListener("click", () => {
+  console.log(111, cashfree);
+  togglePaymentSection("hide");
+  toggleCashFreeSection("show");
+});
+
+loadScript(PAYPAL_SCRIPT_URL, {
+  "data-sdk-integration-source": "developer-studio",
 });
