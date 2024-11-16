@@ -179,6 +179,21 @@ body {
 	margin-right: 8px;
 }
 
+#buyButton {
+	padding: 10px 20px;
+	font-size: 16px;
+	border: none;
+	border-radius: 5px;
+	background-color: #007BFF;
+	color: white;
+	cursor: pointer;
+  }
+  
+  #buyButton:disabled {
+	background-color: #6c757d;
+	cursor: not-allowed;
+  }
+
 
 /* General footer styling */
 .footer {
