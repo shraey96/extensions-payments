@@ -132,6 +132,7 @@ body {
 	justify-content: center;
 	gap: 20px;
 	padding: 50px;
+	padding-bottom: 0;
 }
 
 .pricing-card {
@@ -317,6 +318,37 @@ body {
 	border: 1px solid #ddd;
 	border-radius: 4px;
   }
+
+
+
+  .info-before-purchase {
+	
+	padding: 20px;
+	font-family: Arial, sans-serif;
+	border-radius: 8px;
+	max-width: 600px;
+	margin: 20px auto;
+}
+
+.warning {
+	background-color: #fff;
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.warning h3 {
+	margin-top: 0;
+	font-size: 1.2em;
+	color: #333;
+}
+
+.warning p {
+	margin: 0;
+	font-size: 1em;
+	color: #555;
+}
 
 
 @media (max-width: 768px) {
