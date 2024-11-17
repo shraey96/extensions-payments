@@ -40,8 +40,15 @@
     padding: 30px;
     border-radius: 8px;
     text-align: center;
-    width: 300px;
+    width: 360px;
     position: relative;
+  }
+
+  /* Modal header */
+  .modal__header {
+    color: #000;
+    text-align: center;
+    margin: 10px 0;
   }
 
   /* Modal close button (cross) */
@@ -66,6 +73,7 @@
     margin-bottom: 8px;
     display: block;
     text-align: left;
+    color: #555;
   }
 
   .modal__input {
@@ -97,3 +105,5 @@
   .modal__btn:hover {
     background-color: #45a049;
   }
+
+  

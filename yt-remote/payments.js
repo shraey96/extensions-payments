@@ -227,7 +227,7 @@ continueBtn.addEventListener("click", () => {
 
 cashFreePayBtn.addEventListener("click", () => {
   const phoneValue = phoneInput.value.trim();
-  if (phoneValue) {
+  if (phoneValue && phoneValue.length === 10) {
     // Show the payment page
     handleCashFreeOrderCreate();
   } else {

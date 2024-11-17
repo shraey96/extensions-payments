@@ -78,13 +78,6 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="modal.css" />
-    <!-- <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.css"
-      integrity="sha512-k6op6U+6fzScsVhxntLBg+Ob/Gv64fjNfjuAcNtbngRoi1LKf+aicRaEs3zeTrRuoIkOjGwLf9FR5BR7B3NItw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    /> -->
   </head>
   <body>
     <!-- Info Section -->
@@ -164,7 +157,9 @@
     <!-- Pricing Section -->
     <section id="pricing" class="section">
       <h2>Pricing</h2>
-      <span>All users are subject to a free trial till 30/11/2024</span>
+      <span class="pricing-trial-text"
+        >All users can enjoy a free trial until 30th November 2024</span
+      >
       <div class="pricing-container">
         <div class="pricing-card">
           <h2>Free</h2>
@@ -187,7 +182,7 @@
             <li><span class="check-icon">✔</span> Advanced remote controls</li>
             <li><span class="check-icon">✔</span> Volume Control</li>
             <li><span class="check-icon">✔</span> Repeat videos</li>
-            <li><span class="check-icon">✔</span> Skip ads</li>
+            <li><span class="check-icon">✔</span> Skip ads*</li>
             <li>
               <span class="check-icon">✔</span> Control any number of YouTube
               tabs
@@ -212,7 +207,7 @@
           >
             &times;
           </button>
-          <h2>Checkout</h2>
+          <h2 class="modal__header">Checkout</h2>
 
           <div>
             <!-- Email Input and Info Text -->
@@ -228,6 +223,30 @@
               <p class="modal__info">
                 Your purchase will be tied to this email.
               </p>
+
+              <div class="email-guide">
+                <p class="email-guide-header">
+                  <strong>How to find your email:</strong>
+                </p>
+                <p class="email-guide-info">
+                  Open the extension and click on the
+                  <img
+                    src="images/image.png"
+                    alt="settings"
+                    title="Settings Icon"
+                  />
+                  icon. Look for your email in the profile information.
+                </p>
+
+                <div class="guide-step">
+                  <img
+                    src="images/yt-email-info.png"
+                    alt="Guide step 2"
+                    class="guide-image"
+                  />
+                </div>
+              </div>
+
               <button id="continueBtn" class="modal__btn">Continue</button>
             </div>
 
@@ -235,7 +254,7 @@
             <div id="paymentSection" style="display: none">
               <div class="paymentSectionContent">
                 <div class="paypal-payments-btn-container"></div>
-                <span>OR</span>
+                <span class="or-divider">OR</span>
                 <button class="cashfree-payments-btn-container">
                   Pay via CashFree
                 </button>

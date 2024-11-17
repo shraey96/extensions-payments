@@ -124,7 +124,7 @@ body {
 
 #pricing h2 {
 	font-size: 2em;
-	margin-bottom: 20px;
+	margin-bottom: 8px;
 }
 
 .pricing-container {
@@ -194,6 +194,48 @@ body {
 	cursor: not-allowed;
   }
 
+ .paymentSectionContent {
+	display: flex;
+	flex-direction: column;
+ }
+
+ .or-divider {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #666; /* Neutral gray for the text */
+	font-size: 14px; /* Smaller but readable text size */
+	font-weight: bold; /* Make it stand out */
+	margin: 16px 0; /* Add spacing around it */
+  }
+  
+  .or-divider::before,
+  .or-divider::after {
+	content: "";
+	flex: 1;
+	border-top: 1px solid #ccc; /* Light gray line */
+	margin: 0 8px; /* Space between the line and the text */
+  }
+
+.cashfree-payments-btn-container{
+	background-color: #007cff; /* CashFree brand-like blue */
+	color: #fff; /* White text */
+	border: none; /* Remove border */
+	padding: 12px 20px; /* Add padding */
+	font-size: 16px; /* Adjust text size */
+	font-weight: bold; /* Make the text bold */
+	border-radius: 8px; /* Rounded corners */
+	cursor: pointer; /* Change cursor to pointer */
+	transition: all 0.3s ease; /* Smooth hover effect */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}  
+
+.cashfree-payments-btn-container:hover {
+	background-color: #005bb5; /* Darker blue on hover */
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+	transform: translateY(-2px); /* Slight lift on hover */
+  }
+
 
 /* General footer styling */
 .footer {
@@ -231,6 +273,50 @@ body {
 .footer-links span {
 	color: #666;
 }
+
+.pricing-trial-text {
+	color: #777;
+}
+
+.email-guide {
+	margin-top: 20px;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .email-guide p {
+	font-size: 14px;
+	margin-bottom: 10px;
+  }
+  
+  .email-guide-header {
+	color: #000;
+	font-size: 18px !important
+  }
+
+  .guide-step {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+  }
+
+  .email-guide-info {
+	color: #777;
+	font-size: 12px;
+  }
+
+  .email-guide-info img {
+	height: 20px;
+    margin-bottom: -5px;
+    border-radius: 2px;
+  }
+  
+  .guide-image {
+	height: 280px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+  }
 
 
 @media (max-width: 768px) {
@@ -330,3 +416,4 @@ body {
 	}
 
 }
+
