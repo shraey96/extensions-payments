@@ -231,11 +231,11 @@
           >
             &times;
           </button>
-          <h2 class="modal__header">Checkout</h2>
 
           <div>
             <!-- Email Input and Info Text -->
-            <div id="emailSection">
+            <div id="emailSection" style="display: none">
+              <h2 class="modal__header">Checkout</h2>
               <label for="email" class="modal__label">Enter your email</label>
               <input
                 type="email"
@@ -276,6 +276,7 @@
 
             <!-- Payment Link (Initially hidden) -->
             <div id="paymentSection" style="display: none">
+              <h2 class="modal__header">Pay with:</h2>
               <div class="paymentSectionContent">
                 <div class="paypal-payments-btn-container"></div>
                 <span class="or-divider">OR</span>
@@ -296,7 +297,7 @@
                     type="number"
                     id="phone"
                     class="modal__input"
-                    placeholder="91 2212345678"
+                    placeholder="9191919191"
                     required
                   />
                   <p class="modal__info">
@@ -305,6 +306,20 @@
                   <button id="cashFreePay" class="modal__btn">Pay</button>
                 </div>
               </div>
+            </div>
+
+            <!-- Payment Status (Success) -->
+            <div id="successSection" style="display: none">
+              <div class="success-modal__icon">&#10003;</div>
+
+              <h2 class="modal__header">Payment Successful</h2>
+
+              <p class="modal__info email-guide-info">
+                Thank you for your purchase! Your PRO features are now unlocked.
+              </p>
+
+              <!-- Close or Proceed Button -->
+              <button id="successCloseBtn" class="modal__btn">Close</button>
             </div>
           </div>
         </div>

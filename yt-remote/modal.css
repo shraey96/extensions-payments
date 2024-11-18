@@ -40,7 +40,7 @@
     padding: 30px;
     border-radius: 8px;
     text-align: center;
-    width: 360px;
+    width: 400px;
     position: relative;
   }
 
@@ -106,4 +106,9 @@
     background-color: #45a049;
   }
 
-  
+/* Success Icon */
+.success-modal__icon {
+  font-size: 50px;
+  color: #4caf50;
+  margin-bottom: 15px;
+}

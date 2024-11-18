@@ -4,6 +4,9 @@ const isLocalEnv =
   window.location.origin.includes("localhost") ||
   window.location.origin.includes("127.0.0.1");
 
+const UI_HIDE = "hide";
+const UI_SHOW = "show";
+
 const FUNCTIONS_BASE_URL = isLocalEnv ? "http://127.0.0.1:54321" : "";
 
 const PAYPAL_CLIENT_ID =
@@ -26,21 +29,9 @@ const buyNowButton = document.getElementById("activatePaidVersionButton");
 const cashfreeBtn = document.querySelector(".cashfree-payments-btn-container");
 const cashFreeSection = document.getElementById("cashFreePaymentsSection");
 const cashFreePayBtn = document.getElementById("cashFreePay");
-
-const promisifiedFetch = (url, options = {}) => {
-  return new Promise((resolve, reject) => {
-    fetch(url, options)
-      .then(async (response) => {
-        if (!response.ok) {
-          const res = await response.json();
-          return reject(res);
-        }
-        return response.json(); // You can change this to `response.text()` or other formats if needed
-      })
-      .then((data) => resolve(data))
-      .catch((error) => reject(error));
-  });
-};
+const successSection = document.getElementById("successSection");
+const successCloseBtn = document.getElementById("successCloseBtn");
+const modalCTABtns = document.querySelectorAll(".modal__btn");
 
 const loadScript = (src, attributes = {}) => {
   return new Promise((resolve, reject) => {
@@ -69,6 +60,7 @@ const loadScript = (src, attributes = {}) => {
 };
 
 const showErrorMessage = (error) => {
+  console.log(error.message, error.error);
   alert("Something went wrong: " + error.message || error.error);
   console.error(error);
 };
@@ -110,7 +102,7 @@ const renderPaypalButton = (user_email = "") => {
         };
 
         try {
-          const resp = await promisifiedFetch(
+          await promisifiedFetch(
             `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-capture-order`,
             {
               method: "POST",
@@ -125,7 +117,7 @@ const renderPaypalButton = (user_email = "") => {
             }
           );
 
-          console.log({ resp });
+          toggleSuccessSection("show");
         } catch (error) {
           showErrorMessage(error);
         }
@@ -150,8 +142,6 @@ const handleCashFreeOrderCreate = async () => {
       }
     );
 
-    console.log({ resp });
-
     const payment = await cashfree.checkout({
       paymentSessionId: resp.payment_session_id,
       redirectTarget: "_modal",
@@ -164,13 +154,14 @@ const handleCashFreeOrderCreate = async () => {
       console.log(
         "User has closed the popup or there is some payment error, Check for Payment Status"
       );
-      showErrorMessage(payment);
+      showErrorMessage(payment.error);
     }
 
     if (payment.paymentDetails) {
       // This will be called whenever the payment is completed irrespective of transaction status
       console.log("Payment has been completed, Check for Payment Status");
-      console.log(payment.paymentDetails.paymentMessage);
+      toggleCashFreeSection(UI_HIDE);
+      toggleSuccessSection(UI_SHOW);
     }
   } catch (error) {
     showErrorMessage(error);
@@ -179,37 +170,60 @@ const handleCashFreeOrderCreate = async () => {
 
 // UI Controls
 
-const togglePaymentSection = (type = "hide") => {
+const togglePaymentSection = (type = UI_HIDE) => {
   paymentSection.style.display = type === "show" ? "block" : "none";
 };
 
-const toggleEmailInputSection = (type = "hide") => {
+const toggleEmailInputSection = (type = UI_HIDE) => {
   emailSection.style.display = type === "show" ? "block" : "none";
 };
 
-const toggleModalSection = (type = "hide") => {
+const toggleModalSection = (type = UI_HIDE) => {
   modal.style.display = type === "show" ? "flex" : "none";
   document.body.style.overflow = type === "show" ? "hidden" : "auto";
 };
 
-const toggleCashFreeSection = (type = "hide") => {
+const toggleCashFreeSection = (type = UI_HIDE) => {
   cashFreeSection.style.display = type === "show" ? "block" : "none";
 };
 
-const openModal = () => {
-  toggleModalSection("show");
-  toggleEmailInputSection("show");
+const toggleSuccessSection = (type = UI_HIDE) => {
+  successSection.style.display = type === UI_SHOW ? "block" : "none";
 };
+
+const toggleButtonLoadingState = (isLoading = false) => {
+  modalCTABtns?.forEach((btn) => {
+    btn.disabled = isLoading;
+    btn.style.cursor = isLoading ? "wait" : "pointer";
+  });
+};
+
+const openModal = () => {
+  toggleModalSection(UI_SHOW);
+  toggleEmailInputSection(UI_SHOW);
+};
+
+const closeModal = () => {
+  toggleModalSection(UI_HIDE);
+  toggleEmailInputSection(UI_HIDE);
+  togglePaymentSection(UI_HIDE);
+  toggleCashFreeSection(UI_HIDE);
+  toggleSuccessSection(UI_HIDE);
+  toggleButtonLoadingState(false);
+};
+
+successCloseBtn.addEventListener("click", () => {
+  closeModal();
+});
 
 // Close modal when the close button is clicked
 closeModalBtn.addEventListener("click", () => {
-  toggleModalSection("hide");
-  toggleEmailInputSection("hide");
-  togglePaymentSection("hide");
-  toggleCashFreeSection("hide");
+  closeModal();
 });
 
-buyNowButton.addEventListener("click", () => openModal());
+buyNowButton.addEventListener("click", () => {
+  openModal();
+});
 
 // Handle the "Continue" button click
 continueBtn.addEventListener("click", () => {
@@ -217,8 +231,8 @@ continueBtn.addEventListener("click", () => {
   const emailValue = emailInput.value.trim();
   if (emailValue) {
     // Show the payment page
-    toggleEmailInputSection("hide");
-    togglePaymentSection("show");
+    toggleEmailInputSection(UI_HIDE);
+    togglePaymentSection(UI_SHOW);
     renderPaypalButton(emailValue);
   } else {
     alert("Please enter a valid email address.");
@@ -236,10 +250,29 @@ cashFreePayBtn.addEventListener("click", () => {
 });
 
 cashfreeBtn.addEventListener("click", () => {
-  togglePaymentSection("hide");
-  toggleCashFreeSection("show");
+  togglePaymentSection(UI_HIDE);
+  toggleCashFreeSection(UI_SHOW);
 });
 
 loadScript(PAYPAL_SCRIPT_URL, {
   "data-sdk-integration-source": "developer-studio",
 });
+
+const promisifiedFetch = (url, options = {}) => {
+  toggleButtonLoadingState(true);
+  return new Promise((resolve, reject) => {
+    fetch(url, options)
+      .then(async (response) => {
+        if (!response.ok) {
+          const res = await response.json();
+          return reject(res);
+        }
+        return response.json(); // You can change this to `response.text()` or other formats if needed
+      })
+      .then((data) => resolve(data))
+      .catch((error) => reject(error))
+      .finally(() => {
+        toggleButtonLoadingState(false);
+      });
+  });
+};
