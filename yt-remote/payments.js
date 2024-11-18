@@ -93,7 +93,7 @@ const renderPaypalButton = (user_email = "") => {
               body: JSON.stringify({ gateway: "paypal", user_email }),
             }
           );
-          console.log(resp);
+
           return resp.id;
         } catch (error) {
           console.error(error);
