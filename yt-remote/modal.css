@@ -42,6 +42,8 @@
     text-align: center;
     width: 400px;
     position: relative;
+    max-height: 70%;
+    overflow: scroll;
   }
 
   /* Modal header */

@@ -28,7 +28,9 @@ const continueBtn = document.getElementById("continueBtn");
 const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
 const buyNowButton = document.getElementById("activatePaidVersionButton");
+const paypalBtn = document.querySelector(".paypal-payments-btn-container");
 const cashfreeBtn = document.querySelector(".cashfree-payments-btn-container");
+const paypalSection = document.getElementById("paypalPaymentsSection");
 const cashFreeSection = document.getElementById("cashFreePaymentsSection");
 const cashFreePayBtn = document.getElementById("cashFreePay");
 const successSection = document.getElementById("successSection");
@@ -62,13 +64,12 @@ const loadScript = (src, attributes = {}) => {
 };
 
 const showErrorMessage = (error) => {
-  console.log(error.message, error.error);
   alert("Something went wrong: " + error.message || error.error);
   console.error(error);
 };
 
 const renderPaypalButton = (user_email = "") => {
-  document.querySelector(".paypal-payments-btn-container").innerHTML = "";
+  document.querySelector(".paypal-buttons-container").innerHTML = "";
   window.paypal
     .Buttons({
       style: {
@@ -118,14 +119,14 @@ const renderPaypalButton = (user_email = "") => {
               }),
             }
           );
-
-          toggleSuccessSection("show");
+          togglePaymentSection(UI_HIDE);
+          toggleSuccessSection(UI_SHOW);
         } catch (error) {
           showErrorMessage(error);
         }
       },
     })
-    .render(".paypal-payments-btn-container");
+    .render(".paypal-buttons-container");
 };
 
 const handleCashFreeOrderCreate = async () => {
@@ -189,6 +190,10 @@ const toggleCashFreeSection = (type = UI_HIDE) => {
   cashFreeSection.style.display = type === "show" ? "block" : "none";
 };
 
+const togglePaypalSection = (type = UI_HIDE) => {
+  paypalSection.style.display = type === "show" ? "block" : "none";
+};
+
 const toggleSuccessSection = (type = UI_HIDE) => {
   successSection.style.display = type === UI_SHOW ? "block" : "none";
 };
@@ -211,6 +216,7 @@ const closeModal = () => {
   togglePaymentSection(UI_HIDE);
   toggleCashFreeSection(UI_HIDE);
   toggleSuccessSection(UI_HIDE);
+  togglePaypalSection(UI_HIDE);
   toggleButtonLoadingState(false);
 };
 
@@ -254,6 +260,11 @@ cashFreePayBtn.addEventListener("click", () => {
 cashfreeBtn.addEventListener("click", () => {
   togglePaymentSection(UI_HIDE);
   toggleCashFreeSection(UI_SHOW);
+});
+
+paypalBtn.addEventListener("click", () => {
+  togglePaymentSection(UI_HIDE);
+  togglePaypalSection(UI_SHOW);
 });
 
 loadScript(PAYPAL_SCRIPT_URL, {

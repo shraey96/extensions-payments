@@ -223,7 +223,7 @@ body {
 	margin: 0 8px; /* Space between the line and the text */
   }
 
-.cashfree-payments-btn-container{
+.paypal-payments-btn-container, .cashfree-payments-btn-container{
 	background-color: #007cff; /* CashFree brand-like blue */
 	color: #fff; /* White text */
 	border: none; /* Remove border */
@@ -236,7 +236,7 @@ body {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }  
 
-.cashfree-payments-btn-container:hover {
+.paypal-payments-btn-container:hover, .cashfree-payments-btn-container:hover {
 	background-color: #005bb5; /* Darker blue on hover */
 	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
 	transform: translateY(-2px); /* Slight lift on hover */
