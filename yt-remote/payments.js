@@ -36,6 +36,7 @@ const cashFreePayBtn = document.getElementById("cashFreePay");
 const successSection = document.getElementById("successSection");
 const successCloseBtn = document.getElementById("successCloseBtn");
 const modalCTABtns = document.querySelectorAll(".modal__btn");
+const modalLoader = document.getElementById("modal-loader");
 
 const loadScript = (src, attributes = {}) => {
   return new Promise((resolve, reject) => {
@@ -64,7 +65,7 @@ const loadScript = (src, attributes = {}) => {
 };
 
 const showErrorMessage = (error) => {
-  alert("Something went wrong: " + error.message || error.error);
+  alert(`Something went wrong: ${error.message || error.error}`);
   console.error(error);
 };
 
@@ -92,9 +93,10 @@ const renderPaypalButton = (user_email = "") => {
               body: JSON.stringify({ gateway: "paypal", user_email }),
             }
           );
-
+          console.log(resp);
           return resp.id;
         } catch (error) {
+          console.error(error);
           showErrorMessage(error);
         }
       },
@@ -120,6 +122,7 @@ const renderPaypalButton = (user_email = "") => {
             }
           );
           togglePaymentSection(UI_HIDE);
+          togglePaypalSection(UI_HIDE);
           toggleSuccessSection(UI_SHOW);
         } catch (error) {
           showErrorMessage(error);
@@ -173,6 +176,8 @@ const handleCashFreeOrderCreate = async () => {
 
 // UI Controls
 
+const toggleLoader = () => {};
+
 const togglePaymentSection = (type = UI_HIDE) => {
   paymentSection.style.display = type === "show" ? "block" : "none";
 };
@@ -203,6 +208,7 @@ const toggleButtonLoadingState = (isLoading = false) => {
     btn.disabled = isLoading;
     btn.style.cursor = isLoading ? "wait" : "pointer";
   });
+  modalLoader.style.display = isLoading ? "block" : "none";
 };
 
 const openModal = () => {
