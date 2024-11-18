@@ -7,6 +7,13 @@ const isLocalEnv =
 const UI_HIDE = "hide";
 const UI_SHOW = "show";
 
+const PRICING_INFO = {
+  US: "$1.99",
+  IN: "₹168",
+};
+
+const IPINFO_API_KEY = "ae38604b0d1452";
+
 const FUNCTIONS_BASE_URL = isLocalEnv
   ? "http://127.0.0.1:54321/functions/v1"
   : "https://qmagdgjpktfwubtnuhuq.supabase.co/functions/v1";
@@ -37,6 +44,7 @@ const successSection = document.getElementById("successSection");
 const successCloseBtn = document.getElementById("successCloseBtn");
 const modalCTABtns = document.querySelectorAll(".modal__btn");
 const modalLoader = document.getElementById("modal-loader");
+const pricingInfo = document.querySelector(".pricing-currency");
 
 const loadScript = (src, attributes = {}) => {
   return new Promise((resolve, reject) => {
@@ -277,8 +285,10 @@ loadScript(PAYPAL_SCRIPT_URL, {
   "data-sdk-integration-source": "developer-studio",
 });
 
-const promisifiedFetch = (url, options = {}) => {
-  toggleButtonLoadingState(true);
+const promisifiedFetch = (url, options = {}, withLoader = true) => {
+  if (withLoader) {
+    toggleButtonLoadingState(true);
+  }
   return new Promise((resolve, reject) => {
     fetch(url, options)
       .then(async (response) => {
@@ -286,12 +296,22 @@ const promisifiedFetch = (url, options = {}) => {
           const res = await response.json();
           return reject(res);
         }
-        return response.json(); // You can change this to `response.text()` or other formats if needed
+        return response.json();
       })
       .then((data) => resolve(data))
       .catch((error) => reject(error))
       .finally(() => {
-        toggleButtonLoadingState(false);
+        if (withLoader) {
+          toggleButtonLoadingState(false);
+        }
       });
   });
 };
+
+promisifiedFetch(`https://ipinfo.io?token=${IPINFO_API_KEY}`)
+  .then((resp) => {
+    pricingInfo.innerHTML = PRICING_INFO[resp.country] || PRICING_INFO["US"];
+  })
+  .catch(() => {
+    pricingInfo.innerHTML = PRICING_INFO["US"];
+  });
