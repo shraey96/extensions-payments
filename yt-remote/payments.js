@@ -7,7 +7,9 @@ const isLocalEnv =
 const UI_HIDE = "hide";
 const UI_SHOW = "show";
 
-const FUNCTIONS_BASE_URL = isLocalEnv ? "http://127.0.0.1:54321" : "";
+const FUNCTIONS_BASE_URL = isLocalEnv
+  ? "http://127.0.0.1:54321/functions/v1"
+  : "https://qmagdgjpktfwubtnuhuq.supabase.co/functions/v1";
 
 const PAYPAL_CLIENT_ID =
   "AZot3DPGFuNM4c6GJPMjaS07BEPvt_ikO3uT_5gesGg4TWKbH2fF2wShY1-rPG_G5PJuQKTcEV5jY0jX";
@@ -79,7 +81,7 @@ const renderPaypalButton = (user_email = "") => {
       createOrder: async () => {
         try {
           const resp = await promisifiedFetch(
-            `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-create-order`,
+            `${FUNCTIONS_BASE_URL}/yt-payments-create-order`,
 
             {
               method: "POST",
@@ -103,7 +105,7 @@ const renderPaypalButton = (user_email = "") => {
 
         try {
           await promisifiedFetch(
-            `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-capture-order`,
+            `${FUNCTIONS_BASE_URL}/yt-payments-capture-order`,
             {
               method: "POST",
               headers: {
@@ -132,7 +134,7 @@ const handleCashFreeOrderCreate = async () => {
 
   try {
     const resp = await promisifiedFetch(
-      `${FUNCTIONS_BASE_URL}/functions/v1/yt-payments-create-order`,
+      `${FUNCTIONS_BASE_URL}/yt-payments-create-order`,
       {
         method: "POST",
         headers: {
