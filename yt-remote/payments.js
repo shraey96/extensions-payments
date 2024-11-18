@@ -19,7 +19,7 @@ const FUNCTIONS_BASE_URL = isLocalEnv
   : "https://qmagdgjpktfwubtnuhuq.supabase.co/functions/v1";
 
 const PAYPAL_CLIENT_ID =
-  "AZot3DPGFuNM4c6GJPMjaS07BEPvt_ikO3uT_5gesGg4TWKbH2fF2wShY1-rPG_G5PJuQKTcEV5jY0jX";
+  "AbJm5VtO8Pz77yFMoVsAWvdL9KIrGfr78UBeyuH6Zvko9ubiG6tWkbZUhbcVNT1F6Vx3HZxLV5QzzI_L";
 const PAYPAL_SCRIPT_URL = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD&components=buttons&disable-funding=venmo,paylater`;
 
 const cashfree = Cashfree({
