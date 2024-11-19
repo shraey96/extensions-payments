@@ -91,7 +91,7 @@ const renderPaypalButton = (user_email = "") => {
       createOrder: async () => {
         try {
           const resp = await promisifiedFetch(
-            `${FUNCTIONS_BASE_URL}/yt-payments-create-order`,
+            `${FUNCTIONS_BASE_URL}/payments-create-order`,
 
             {
               method: "POST",
@@ -116,7 +116,7 @@ const renderPaypalButton = (user_email = "") => {
 
         try {
           await promisifiedFetch(
-            `${FUNCTIONS_BASE_URL}/yt-payments-capture-order`,
+            `${FUNCTIONS_BASE_URL}/payments-capture-order`,
             {
               method: "POST",
               headers: {
@@ -146,7 +146,7 @@ const handleCashFreeOrderCreate = async () => {
 
   try {
     const resp = await promisifiedFetch(
-      `${FUNCTIONS_BASE_URL}/yt-payments-create-order`,
+      `${FUNCTIONS_BASE_URL}/payments-create-order`,
       {
         method: "POST",
         headers: {
